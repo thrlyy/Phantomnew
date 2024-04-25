@@ -20,3 +20,5 @@ All credits goes to C5.
 - Remove usage of donut as it has basic mem loader or do morphing after passing through donut for native files
 - Add rootkit
 - Remove usage of .vbs(highly sigged)
+- Add DLL Unhooking in BSTUB
+- Better AMSI Patch
