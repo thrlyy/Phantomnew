@@ -23,5 +23,6 @@ Phantom (Crybat/Jlaive Rewrite) is an antivirus evasion tool that can convert ex
 - Remove usage of .vbs(highly sigged)
 - ~~Add DLL Unhooking in BSTUB~~
 - ~~Better AMSI Patch~~
+- Add IEX Wrapper
 
 Join the gang - https://t.me/+bL06ZatKrDdkMjBh
