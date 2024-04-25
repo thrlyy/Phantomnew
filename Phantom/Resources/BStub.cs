@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,6 +13,7 @@ namespace PHANTOM
 
         [DllImport("kernel32.dll")]
         private static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
 
         private static IntPtr ASLR(IntPtr Relative_Address, IntPtr Relative_BaseAddress, string ModuleName)
         {
@@ -53,3 +54,4 @@ namespace PHANTOM
         }
     }
 }
+*/

