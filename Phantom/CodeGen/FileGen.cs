@@ -19,7 +19,7 @@ namespace Phantom
             StringBuilder output = new StringBuilder();
 
             // Start building the batch file content
-            output.AppendLine(@"@echo off");
+            //output.AppendLine(@"@echo off");
 
             // Generate random variable names
             string randomvarstr_1 = Utils.RandomString(20, rng);

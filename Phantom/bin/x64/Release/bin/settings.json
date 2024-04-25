@@ -1,0 +1,11 @@
+{
+  "inputFile": "",
+  "antiDebug": false,
+  "antiVM": false,
+  "selfDelete": false,
+  "hidden": false,
+  "runas": false,
+  "startup": false,
+  "uacBypass": false,
+  "bindedFiles": []
+}
