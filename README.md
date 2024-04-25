@@ -8,7 +8,7 @@ Phantom (Crybat/Jlaive Rewrite) is an antivirus evasion tool that can convert ex
 - BSTUB Obfuscation upon Build
 - WD Bypassed as of 4/25/2024
 
-![image](https://raw.githubusercontent.com/sexyiam/Phantom/main/Images/Screenshot 2024-04-25 083400.png)
+![image](https://raw.githubusercontent.com/sexyiam/Phantom/main/Images/Screenshot.png)
 
 ## TODO 
 - Change BAT Obfuscation to evade YARA Rules
