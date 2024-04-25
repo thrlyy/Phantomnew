@@ -1,0 +1,15 @@
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\Phantom.exe.config
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\Phantom.exe
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\dnlib.xml
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\Newtonsoft.Json.xml
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\System.Diagnostics.DiagnosticSource.xml
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\bin\x64\Release\System.ValueTuple.xml
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.AssemblyReference.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.PhantomMain.resources
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.Properties.Resources.resources
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.GenerateResource.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.CoreCompileInputs.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.Fody.CopyLocal.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.Fody.RuntimeCopyLocal.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.csproj.Up2Date
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\x64\Release\Phantom.exe

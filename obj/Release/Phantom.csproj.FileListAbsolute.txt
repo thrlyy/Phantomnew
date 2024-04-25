@@ -1,0 +1,6 @@
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.csproj.AssemblyReference.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.PhantomMain.resources
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.Properties.Resources.resources
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.csproj.GenerateResource.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.csproj.CoreCompileInputs.cache
+C:\Users\dgwer\Downloads\Phantom-main (1)\Phantom-main\Phantom\obj\Release\Phantom.exe
