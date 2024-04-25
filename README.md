@@ -24,17 +24,10 @@ Phantom (Crybat/Jlaive Rewrite) is an antivirus evasion tool that can convert ex
 **Before:**
 ![image](https://raw.githubusercontent.com/C5Hackr/Phantom/main/Images/PhantomBefore.png)
 **After:**
-![image](https://raw.githubusercontent.com/C5Hackr/Phantom/main/Images/PhantomAfter.png)
+![image]([https://raw.githubusercontent.com/C5Hackr/Phantom/main/Images/PhantomAfter.png](https://raw.githubusercontent.com/sexyiam/Phantom/main/Images/Screenshot%202024-04-25%20022634.png))
 
-
-## Donate
-BTC: bc1q56q504wh060l4uhf629c9x2mg66dc0y2jkdkpw
-
-LTC: ltc1qka5un80vrsrc3x5a22s6552ztr8jenw5wytq7d
-
-ETH: 0x0F80A5E152a2588EFB6f18AAb2A58841db425e97
-
-RVN: RAKRxWHgbmGcSid6V7NTRJxyPMY9CJCqdT
-
-## Disclaimer
-This project was made for educational purposes only. I am not responsible if you choose to use this illegally/maliciously.
+All credits goes to C5.
+Changelog - 
+Updated UAC Bypass
+New BSTUB with AMSI Patch via Indirect Syscalls
+BSTUB Obfuscation upon Build
